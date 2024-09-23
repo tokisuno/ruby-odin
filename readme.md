@@ -8,7 +8,7 @@ This is the main repo where I will put all of my solutions for TOP related proje
 - I just want to work with something I know won't undergo extreme framework changes every 6 months.
 
 ## Progress
-- [-] Ruby
+- [ ] Ruby
 - [ ] Intermediate HTML and CSS
 - [ ] Databases
 - [ ] Ruby on Rails
