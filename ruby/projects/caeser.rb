@@ -11,11 +11,23 @@ def cypher(string, offset)
   upper_case = 65..90
 
   string = string.chars.map(&:ord).map do |c|
-    c + offset
-    # if lower_case.include?(c) then c + offset end
-    # if upper_case.include?(c) then c + offset end
+    new_char = c + offset
+    if lower_case.include?(c)
+      if new_char > 122
+        new_char = 96 + (new_char - 122) # inclusive
+      end
+      new_char
+    elsif upper_case.include?(c)
+      if new_char > 90
+        new_char = 64 + (new_char - 90) # inclusive
+      end
+      new_char
+    else
+      c
+    end
   end
-  print string
+  string = string.map(&:ord).map(&:chr).join('')
+  puts string
 end
 
-cypher('hello', 3)
+cypher('What a string!', 5)
