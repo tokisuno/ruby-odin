@@ -1,7 +1,10 @@
 class MyCar
   attr_accessor :colour
-
   attr_reader :year
+
+  def self.mileage(gallons, miles)
+    puts "#{miles / gallons} miles per gallon of gas"
+  end
 
   def initialize(yr, clr, mdl)
     @year = yr
@@ -37,14 +40,19 @@ class MyCar
     @speed = 0
     puts "ERRRRR (car stopping noises)"
   end
+
+  def to_s
+    puts "The car is a #{colour}, #{year}, #{@model}!"
+  end
 end
 
 car = MyCar.new("2002", "Red", "Toyota Tacoma")
-puts car.speed
-puts car.speed_up(12)
-puts car.speed
-car.break(2)
-car.get_colour
-car.spray_paint("Blue")
-car.get_colour
-car.year
+puts car
+# puts car.speed
+# puts car.speed_up(12)
+# puts car.speed
+# car.break(2)
+# car.get_colour
+# car.spray_paint("Blue")
+# car.get_colour
+# car.year
