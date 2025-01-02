@@ -1,0 +1,105 @@
+module Diesel
+  def fuel
+    'I take diesel fuel!'
+  end
+end
+
+module Gas
+  def fuel
+    'I take normal gasoline!'
+  end
+end
+
+class Vehicle
+  attr_accessor :colour
+  attr_reader :model, :year
+
+  @@count = 0
+
+  def self.total_amount_of_vehicles
+    puts "This program has created #{@@count} vehicles"
+  end
+
+  def self.gas_mileage(gallons, miles)
+    puts "#{miles / gallons} miles per gallon of gas"
+  end
+
+  def initialize(year, model, colour)
+    @@count += 1
+
+    @model = model
+    @year = year
+    @colour = colour
+    @current_speed = 0
+  end
+
+  def speed_up(number)
+    @current_speed += number
+    puts "You push the gas and accelerate #{number} mph"
+  end
+
+  def brake(number)
+    @current_speed -= number
+    puts "You push the brake and decelerate #{number} mph"
+  end
+
+  def current_speed
+    puts "You are now going #{@current_speed} mph"
+  end
+
+  def shut_down
+    @current_speed = 0
+    puts 'Parking time!!!!'
+  end
+
+  def spray_paint(colour)
+    self.colour = colour
+    puts "Your new #{colour} paint job looks great!"
+  end
+
+  def age
+    "Your #{colour} #{year} #{model} is #{years_old} years old"
+  end
+
+  private
+
+  def years_old
+    Time.now.year - year
+  end
+end
+
+class MyCar < Vehicle
+  include Gas
+  NUMBER_OF_DOORS = 4
+
+  def to_s
+    "My car is a #{colour}, #{year}, #{model}!"
+  end
+end
+
+class MyTruck < Vehicle
+  include Diesel
+  NUMBER_OF_DOORS = 2
+
+  def to_s
+    "My truck is a #{colour}, #{year}, #{model}!"
+  end
+end
+
+lumina = MyCar.new(1997, 'chevy lumina', 'white')
+lumina.speed_up(20)
+lumina.current_speed
+lumina.speed_up(20)
+lumina.current_speed
+lumina.brake(20)
+lumina.current_speed
+lumina.brake(20)
+lumina.current_speed
+lumina.shut_down
+MyCar.gas_mileage(13, 351)
+lumina.spray_paint('red')
+puts lumina
+puts MyCar.ancestors
+puts MyTruck.ancestors
+puts Vehicle.ancestors
+puts lumina.age
