@@ -42,29 +42,26 @@ class Board
   end
 end
 
-# Base gameplay stuff
-############################################
-board = Board.new
-game = true
-loop = 0
+# Game class
+class Game
+  def initialize(player1, player2)
+    @player1 = player1 # initialize player1
+    @player2 = player2 # initialize player2
+    @start = true # game starts once class is instantiated
+    @board = Board.new
+    @turn = 0 # move index to know whose turn it is
+    # move = 0 = first move of the game
+    # move = 1 = player2 move && move += 1
+    # move = 2 = player1 move && move -= 1
+  end
 
+  def next_turn
+  end
+end
 puts 'Player 1, please enter your name:'
 player1 = Player.new(gets.chomp)
 
 puts 'Player 2, please enter your name:'
 player2 = Player.new(gets.chomp)
-############################################
 
-# Game loop
-while game
-  board.draw_board
-
-  p player1
-  p player2
-
-  player1.won if loop == 1
-
-  return if player1.wins == 1
-
-  loop += 1
-end
+game = Game.new(player1, player2)
