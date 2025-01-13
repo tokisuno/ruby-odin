@@ -1,3 +1,7 @@
+# TODO: Add win condition
+# TODO: Add tie condition
+# TODO: Keep track of score
+
 # Player
 require_relative 'lib/player'
 
@@ -32,7 +36,7 @@ while game.start == true
     game.board.board[arr[0]][arr[1]] = 'o'
   end
 
-  # system('clear') || system('cls')
+  system('clear') || system('cls')
 
   game.board.draw
 end

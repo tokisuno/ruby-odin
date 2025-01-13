@@ -12,7 +12,6 @@ end
 
 module Place
   def place_move(move, all_moves)
-    puts 'i am here'
     @moves.push(move)
     all_moves.push(move)
   end
