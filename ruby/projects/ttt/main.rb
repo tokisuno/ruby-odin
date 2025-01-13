@@ -1,8 +1,11 @@
-# Player class
+# Player
 require_relative 'lib/player'
 
-# Game and Gameboard class
-require_relative 'lib/game-and-board'
+# Board
+require_relative 'lib/board'
+
+# Game
+require_relative 'lib/game'
 
 puts 'Player 1, please enter your name:'
 player1 = Player.new(gets.chomp)
@@ -12,21 +15,21 @@ player2 = Player.new(gets.chomp)
 
 game = Game.new(player1, player2)
 
-# TODO: Input verification
-# TODO: Moves show up on the board
 while game.start == true
   if game.turn.zero? || game.turn == 1
     player1.move(game.all_moves)
-
-    puts "P1 Moves: #{player1.moves}"
-
     game.turn = 2
   else
     player2.move(game.all_moves)
-
-    puts "P2 Moves: #{player2.moves}"
-
     game.turn = 1
+  end
+
+  player1.moves.each do |arr|
+    game.board.board[arr[0]][arr[1]] = 'x'
+  end
+
+  player2.moves.each do |arr|
+    game.board.board[arr[0]][arr[1]] = 'o'
   end
 
   # system('clear') || system('cls')
