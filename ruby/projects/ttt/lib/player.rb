@@ -2,7 +2,9 @@ module Valid
   def valid(move, all_moves)
     if move[0] >= 1 && move[0] <= 3
       if move[1] >= 1 && move[1] <= 3
-        if !all_moves.include?(move) then true end
+        if !all_moves.include?(move)
+          true
+        end
       end
     else
       false
@@ -28,11 +30,13 @@ class Player
   def initialize(name)
     @name = name
     @wins = 0
+    @win_state = false
     @moves = []
   end
 
   def won
     @wins += 1
+    @win_state = true
     puts "#{@name}: #{@wins}"
   end
 
