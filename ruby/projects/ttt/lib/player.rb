@@ -87,7 +87,8 @@ class Player
   def won
     @wins += 1
     @win_state = true
-    puts "#{@name}: #{@wins}"
+    # puts "#{@name}: #{@wins}"
+    puts "#{@name} wins!"
   end
 
   def winner?
