@@ -19,13 +19,63 @@ module Place
   end
 end
 
+module WinConditions
+  def vertical(moves)
+    (1..3).each do |i|
+      if moves.include? [1, i]
+        if moves.include? [2, i]
+          if moves.include? [3, i]
+            return true
+          end
+        end
+      end
+      next
+    end
+    false
+  end
+
+  def horizontal(moves)
+    (1..3).each do |i|
+      if moves.include? [i, 1]
+        if moves.include? [i, 2]
+          if moves.include? [i, 3]
+            return true
+          end
+        end
+      end
+      next
+    end
+    false
+  end
+
+  def cross(moves)
+    if moves.include? [1, 1]
+      if moves.include? [2, 2]
+        if moves.include? [3, 3]
+          return true
+        end
+      end
+    end
+
+    if moves.include? [3, 1]
+      if moves.include? [2, 2]
+        if moves.include? [1, 3]
+          return true
+        end
+      end
+    end
+  end
+  false
+end
+
 # Player class
 class Player
-  attr_accessor :moves, :wins
-  attr_reader :name
+  attr_accessor :moves, :wins, :win_state
+  attr_reader :name, :winner
 
   include Valid
   include Place
+  include WinConditions
 
   def initialize(name)
     @name = name
@@ -38,6 +88,21 @@ class Player
     @wins += 1
     @win_state = true
     puts "#{@name}: #{@wins}"
+  end
+
+  def winner?
+    puts "checking to see if #{@name} won..."
+    if vertical(@moves)
+      won
+    end
+
+    if horizontal(@moves)
+      won
+    end
+
+    if cross(@moves)
+      won
+    end
   end
 
   def move(all_moves)

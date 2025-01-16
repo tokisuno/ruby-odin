@@ -1,14 +1,5 @@
-module CheckWinner
-  def check_winner
-    puts 'this checks who won'
-  end
-end
-
-
 class Game
   attr_accessor :start, :board, :all_moves
-
-  include CheckWinner
 
   def initialize(player1, player2)
     @player1 = player1 # initialize player1
@@ -23,23 +14,26 @@ class Game
     while @start == true
       if @turn.zero? || @turn == 1
         @player1.move(@all_moves)
+        if @all_moves.length >= 5 then @player1.winner? end
+        @player1.moves.each do |arr|
+          @board.board[arr[0]][arr[1]] = 'x'
+        end
         @turn = 2
       else
         @player2.move(@all_moves)
+        if @all_moves.length >= 5 then @player2.winner? end
+        @player2.moves.each do |arr|
+          @board.board[arr[0]][arr[1]] = 'o'
+        end
         @turn = 1
       end
 
-      @player1.moves.each do |arr|
-        @board.board[arr[0]][arr[1]] = 'x'
-      end
+      # puts "#{@player1.win_state} // #{@player2.win_state}"
 
-      @player2.moves.each do |arr|
-        @board.board[arr[0]][arr[1]] = 'o'
-      end
+      if @player1.win_state == true then return end
+      if @player2.win_state == true then return end
 
-      if all_moves.length >= 5 then check_winner() end
-
-      # system('clear') || system('cls')
+      system('clear') || system('cls')
 
       @board.draw
     end
