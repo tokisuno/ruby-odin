@@ -5,16 +5,10 @@
 # Check if input is valid
 module InputValidation
   def input_validation(arr)
-    valid = 0
-
-    if arr.length == 4 then false end
-
-    arr.each do |e|
-      if Integer(e) then valid += 1 end
+    arr.each_with_index do |_, i|
+      Integer(arr[i], exception: false)
     end
-
-    puts valid == 4
-    if valid == 4 then true end
+    arr.length == 4
   end
 end
 
@@ -44,16 +38,19 @@ class Game
     @player = Player.new(gets.chomp)
     while @game == true
       guess
-      # p guess
+      # display result
     end
   end
 
   def guess
     while 1
       puts 'Enter your guess'
+
       @player.guess = gets.chomp.split('')
-      # puts input_validation(@player.guess)
-      if input_validation(@player.guess) == true then return end
+
+      return if input_validation(@player.guess) == true
+
+      puts 'OOPS, invalid input :/'
     end
   end
 end
