@@ -1,5 +1,3 @@
-# TODO: Add win condition
-
 # Player
 require_relative 'lib/player'
 
