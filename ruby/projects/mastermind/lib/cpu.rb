@@ -4,7 +4,7 @@ class CPU
   def initialize
     # 6 items, each will be randomized with values between 1-6
     @name = 'CPU'
-    @secret_code = Array.new(6) { rand(1..6) }
+    @secret_code = Array.new(4) { rand(1..6) }
   end
 
   def new_code

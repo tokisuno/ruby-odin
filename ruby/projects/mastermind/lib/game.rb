@@ -52,25 +52,30 @@ class Game
   include CheckResults
 
   def initialize
-    @player = 0
-    @cpu = CPU.new
+    @player = Player.new
+    @cpu    = CPU.new
+    @menu   = Menu.new
     @result = []
-    @game = true
-    @menu = Menu.new
-    @turns = 0
+    @game   = true
+    @turns  = 0
   end
 
-  def play
-    puts 'What is your name, challenger?'.colorize(:red)
-    @player = Player.new(gets.chomp)
+  def start
+    @player = @menu.menu_scene(@player)
 
-    display_colour_blocks
-
+    puts ''
+    puts '---'
     puts @cpu.secret_code
-
-    @menu.menu_scene
+    puts '---'
     puts @menu.input
+    puts '---'
+    puts ''
 
+    player_make  if @menu.input == 1
+    player_guess if @menu.input == 2
+  end
+
+  def player_guess
     while @game == true
       guess
       check_results
@@ -81,7 +86,9 @@ class Game
     end
   end
 
-  private
+  def player_make
+    @player.make_code
+  end
 
   def guess
     loop do

@@ -3,8 +3,8 @@
 # - Basically like colour combination wordle?
 require './lib/cpu'
 require './lib/player'
-require './lib/menu'
 require './lib/game'
+require './lib/menu'
 
 game = Game.new
-game.play
+game.start
