@@ -4,5 +4,6 @@ class Player
   def initialize(name)
     @name = name
     @guess = []
+    @secret_code = ''
   end
 end

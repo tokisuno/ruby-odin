@@ -56,6 +56,7 @@ class Game
     @cpu = CPU.new
     @result = []
     @game = true
+    @menu = Menu.new
     @turns = 0
   end
 
@@ -66,6 +67,9 @@ class Game
     display_colour_blocks
 
     puts @cpu.secret_code
+
+    @menu.menu_scene
+    puts @menu.input
 
     while @game == true
       guess
