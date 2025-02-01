@@ -3,12 +3,12 @@ This is a TOP project aimed at utilizing classes and practicing project manageme
 
 
 
-- [ ] Think about how you would set this problem up!
-- [ ] Build the game assuming the computer randomly selects
+- [x] Think about how you would set this problem up!
+- [x] Build the game assuming the computer randomly selects
   the secret colors and the human player must guess them.
   Remember that you need to give the proper feedback on how
   good the guess was each turn!
-- [ ] Now refactor your code to allow the human player to
+- [o] Now refactor your code to allow the human player to
   choose whether they want to be the creator of the secret
   code or the guesser.
 - [ ] Build it out so that the computer will guess if you
