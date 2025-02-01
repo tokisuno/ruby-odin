@@ -1,10 +1,4 @@
-# Push guesses into an array
-# If all values in array can be turned into valid integers
-#   -> Return true
-
 require 'colorize'
-
-# NOTE: Maybe make a method that does a pretty-print of the table?
 
 SQUARE = '■'.freeze
 
@@ -25,9 +19,7 @@ module InputValidation
     arr.each_with_index do |_, i|
       tmp = Integer(arr[i], exception: false)
 
-      if tmp > 6 || tmp < 1
-        return false
-      end
+      return false if tmp > 6 || tmp < 1
 
       tmp_array.push(tmp)
     end
@@ -42,12 +34,10 @@ module CheckResults
     @player.guess.each_with_index do |_, i|
       if @player.guess[i] == @cpu.secret_code[i]
         @result.push 100
-        puts 'same spot'
         next
       end
       if @cpu.secret_code.include?(@player.guess[i])
         @result.push 2
-        puts 'in the array'
         next
       end
     end
@@ -69,7 +59,6 @@ class Game
     @turns = 0
   end
 
-
   def play
     puts 'What is your name, challenger?'.colorize(:red)
     @player = Player.new(gets.chomp)
@@ -82,13 +71,16 @@ class Game
       guess
       check_results
       display_results
+      @turns += 1
+      game_over if @turns == 12
+      puts "Turns: #{@turns}/12"
     end
   end
 
   private
 
   def guess
-    while 1
+    loop do
       puts 'Enter your guess'
 
       @player.guess = gets.chomp.split('')
@@ -103,22 +95,37 @@ class Game
   end
 
   def display_results
+    puts 'Your guess'
+
+    @player.guess.each do |item|
+      print GAME_COLOURS[item]
+    end
+
+    puts ''
+
     @result.each do |item|
       print SQUARE.colorize(:red) if item == 100
       print SQUARE.colorize(:grey) if item == 2
     end
+
     puts ''
+
     if @result.sum == 400
       puts 'you win!'
       @game = false
     end
+
     @result = []
   end
-
 
   def display_colour_blocks
     (1..6).each do |i|
       puts "#{i}: #{GAME_COLOURS[i]}"
     end
+  end
+
+  def game_over
+    @game = false
+    puts 'Game over!'
   end
 end
