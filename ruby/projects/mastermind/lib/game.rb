@@ -1,4 +1,5 @@
 require 'colorize'
+require_relative 'input_validation'
 
 SQUARE = '■'.freeze
 
@@ -11,22 +12,6 @@ GAME_COLOURS = {
   6 => SQUARE.colorize(:light_black)
 }.freeze
 
-# Check if input is valid
-# TODO: Ensure that characters don't get by
-module InputValidation
-  def input_validation(arr)
-    tmp_array = []
-    arr.each_with_index do |_, i|
-      tmp = Integer(arr[i], exception: false)
-
-      return false if tmp > 6 || tmp < 1
-
-      tmp_array.push(tmp)
-    end
-    @player.guess = tmp_array
-    arr.length == 4
-  end
-end
 
 # Checks result of answer
 module CheckResults
@@ -87,7 +72,8 @@ class Game
   end
 
   def player_make
-    @player.make_code
+    player_code = @player.make_code
+    puts player_code
   end
 
   def guess
@@ -96,7 +82,7 @@ class Game
 
       @player.guess = gets.chomp.split('')
 
-      if input_validation(@player.guess) == true
+      if input_validation(@player.guess, @player) == true
         puts 'Good answer'.colorize(:green)
         return
       end
