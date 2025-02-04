@@ -1,6 +1,6 @@
 # Check if input is valid
 module InputValidation
-  def input_validation(arr, obj)
+  def input_validation(arr, obj, state)
     tmp_array = []
     arr.each_with_index do |_, i|
       tmp = Integer(arr[i], exception: false)
@@ -9,7 +9,10 @@ module InputValidation
 
       tmp_array.push(tmp)
     end
-    obj.guess = tmp_array
+
+    if state == 'guess' then obj.guess = tmp_array end
+    if state == 'make' then obj.secret_code = tmp_array end
+
     arr.length == 4
   end
 end

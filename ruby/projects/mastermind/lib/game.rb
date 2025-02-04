@@ -12,19 +12,28 @@ GAME_COLOURS = {
   6 => SQUARE.colorize(:light_black)
 }.freeze
 
-
 # Checks result of answer
 module CheckResults
-  def check_results
-    @player.guess.each_with_index do |_, i|
-      if @player.guess[i] == @cpu.secret_code[i]
+  def check_results(maker, guesser)
+    p maker, guesser
+    guesser.guess.each_with_index do |_, i|
+      if guesser.guess[i] == maker.secret_code[i]
         @result.push 100
         next
       end
-      if @cpu.secret_code.include?(@player.guess[i])
+      if maker.secret_code.include?(guesser.guess[i])
         @result.push 2
         next
       end
+    end
+  end
+
+  def turn_tracker
+    @turns += 1
+    puts "Turns: #{@turns}"
+    if @turns == 12
+      @turns = 0
+      game_over
     end
   end
 end
@@ -52,8 +61,6 @@ class Game
     puts '---'
     puts @cpu.secret_code
     puts '---'
-    puts @menu.input
-    puts '---'
     puts ''
 
     player_make  if @menu.input == 1
@@ -62,53 +69,42 @@ class Game
 
   def player_guess
     while @game == true
-      guess
+      @player.guessing
       check_results
-      display_results
-      @turns += 1
-      game_over if @turns == 12
-      puts "Turns: #{@turns}/12"
+      display_results(@player.guess)
+      turn_tracker
     end
   end
 
   def player_make
     player_code = @player.make_code
-    puts player_code
-  end
 
-  def guess
-    loop do
-      puts 'Enter your guess'
+    p player_code
 
-      @player.guess = gets.chomp.split('')
-
-      if input_validation(@player.guess, @player) == true
-        puts 'Good answer'.colorize(:green)
-        return
-      end
-
-      puts 'OOPS, invalid input :/'
+    while @game == true
+      puts 'cpu has to guess now...'
+      @cpu.guessing
+      check_results(@player, @cpu)
+      display_results(@cpu.guess)
+      turn_tracker
     end
   end
 
-  def display_results
+  def display_results(guesser)
     puts 'Your guess'
-
-    @player.guess.each do |item|
-      print GAME_COLOURS[item]
-    end
+    p guesser
+    guesser.each { |item| print GAME_COLOURS[item] }
 
     puts ''
-
+    puts "RESULT: #{@result}"
     @result.each do |item|
       print SQUARE.colorize(:red) if item == 100
       print SQUARE.colorize(:grey) if item == 2
     end
-
     puts ''
 
     if @result.sum == 400
-      puts 'you win!'
+      puts 'You win!'
       @game = false
     end
 
