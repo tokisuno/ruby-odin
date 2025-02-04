@@ -9,7 +9,7 @@ GAME_COLOURS = {
   3 => SQUARE.colorize(:red),
   4 => SQUARE.colorize(:yellow),
   5 => SQUARE.colorize(:brown),
-  6 => SQUARE.colorize(:light_black)
+  6 => SQUARE.colorize(:light_black),
 }.freeze
 
 # Checks result of answer
@@ -20,12 +20,14 @@ module CheckResults
       if guesser.guess[i] == maker.secret_code[i]
         @result.push 100
         next
-      end
-      if maker.secret_code.include?(guesser.guess[i])
+      elsif maker.secret_code.include?(guesser.guess[i])
         @result.push 2
         next
+      else
+        @result.push 0
       end
     end
+    @feedback = @result
   end
 
   def turn_tracker
@@ -46,12 +48,13 @@ class Game
   include CheckResults
 
   def initialize
-    @player = Player.new
-    @cpu    = CPU.new
-    @menu   = Menu.new
-    @result = []
-    @game   = true
-    @turns  = 0
+    @player   = Player.new
+    @cpu      = CPU.new
+    @menu     = Menu.new
+    @result   = []
+    @feedback = []
+    @game     = true
+    @turns    = 0
   end
 
   def start
@@ -70,8 +73,8 @@ class Game
   def player_guess
     while @game == true
       @player.guessing
-      check_results
-      display_results(@player.guess)
+      check_results(@cpu, @player)
+      display_results(@player)
       turn_tracker
     end
   end
@@ -83,23 +86,24 @@ class Game
 
     while @game == true
       puts 'cpu has to guess now...'
-      @cpu.guessing
+      @cpu.guessing(@turns, @feedback)
       check_results(@player, @cpu)
-      display_results(@cpu.guess)
+      display_results(@cpu)
       turn_tracker
+      sleep(1)
     end
   end
 
   def display_results(guesser)
     puts 'Your guess'
-    p guesser
-    guesser.each { |item| print GAME_COLOURS[item] }
+    guesser.guess.each { |item| print GAME_COLOURS[item] }
 
     puts ''
     puts "RESULT: #{@result}"
     @result.each do |item|
-      print SQUARE.colorize(:red) if item == 100
-      print SQUARE.colorize(:grey) if item == 2
+      print SQUARE.colorize(:red)     if item == 100
+      print SQUARE.colorize(:yellow)  if item == 2
+      print SQUARE.colorize(:grey)    if item == 0
     end
     puts ''
 

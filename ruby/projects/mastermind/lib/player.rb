@@ -18,7 +18,7 @@ class Player
 
       puts @secret_code
 
-      if input_validation(@secret_code, self) == true
+      if input_validation(@secret_code, self, 'make') == true
         puts 'Hmm, nice code!'.colorize(:green)
         return @secret_code
       end
@@ -33,7 +33,7 @@ class Player
 
       @guess = gets.chomp.split('')
 
-      if input_validation(@guess, self) == true
+      if input_validation(@guess, self, 'guess') == true
         puts 'Good answer'.colorize(:green)
         return
       end
