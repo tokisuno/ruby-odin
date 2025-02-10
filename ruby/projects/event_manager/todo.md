@@ -1,4 +1,4 @@
 # TODO
-- [ ] Clean phone numbers
-- [ ] Time targeting
-- [ ] Day of the week targeting
+- [x] Clean phone numbers
+- [x] Time targeting
+- [x] Day of the week targeting
