@@ -10,6 +10,7 @@ module UIUX
       print '_'
     end
     puts ''
+    puts "Used Letters: #{used_letters}"
   end
 end
 
@@ -18,13 +19,14 @@ class Round
   def initialize(word, guesses)
     @word = word
     @guesses = guesses
+    @used_letters = []
   end
 
   include UIUX
 
   def begin
     debug
-    display_guesses(@word, @guesses)
+    display_guesses(@word, @used_letters)
   end
 end
 
@@ -35,6 +37,7 @@ class Game
     @word = ''
   end
 
+  # Apparently has too many lines but idk how to solved that ...
   def main_menu
     puts 'would you like to load a save?'
     input = gets.chomp.chars.first.downcase
