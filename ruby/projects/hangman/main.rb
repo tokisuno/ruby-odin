@@ -1,7 +1,36 @@
+module UIUX
+  def debug
+    system('clear')
+    puts "WORD    | #{@word}"
+    puts "GUESSES | #{@guesses}"
+  end
+
+  def display_guesses(word, used_letters)
+    word.chomp.split('').each do |_|
+      print '_'
+    end
+    puts ''
+  end
+end
+
+# Daughter Round class
+class Round
+  def initialize(word, guesses)
+    @word = word
+    @guesses = guesses
+  end
+
+  include UIUX
+
+  def begin
+    debug
+    display_guesses(@word, @guesses)
+  end
+end
+
+# Mother Game class
 class Game
-  def initialize(player_name)
-    @player_name = player_name
-    @guessing = true
+  def initialize
     @guesses = 0
     @word = ''
   end
@@ -14,7 +43,7 @@ class Game
         load_save
         return
       elsif input.downcase == 'n'
-        start_game
+        round_init
         return
       else
         puts "input #{input} invalid: try again"
@@ -22,12 +51,6 @@ class Game
         next
       end
     end
-  end
-
-  def start_game
-    secret_word
-    puts @word
-    puts @guesses
   end
 
   def load_save
@@ -41,9 +64,14 @@ class Game
       if line.chomp.length in (5..12) then arr.push(line) end
     end
     @word = arr.sample
-    @guesses = @word.chomp.length
+  end
+
+  def round_init
+    secret_word
+    r = Round.new(@word, @word.chomp.length)
+    r.begin
   end
 end
 
-game = Game.new('lucas')
+game = Game.new
 game.main_menu
