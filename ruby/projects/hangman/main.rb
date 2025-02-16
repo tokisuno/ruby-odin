@@ -1,3 +1,4 @@
+require_relative './lib/data'
 require_relative './lib/round'
 require_relative './lib/menu'
 

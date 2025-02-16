@@ -4,6 +4,7 @@ class Game
   #   @guesses = 0
   #   @word = ''
   # end
+  include DataManip
 
   # Apparently has too many lines but idk how to solved that ...
   def main_menu
@@ -11,10 +12,10 @@ class Game
     input = gets.chomp.chars.first.downcase
     loop do
       if input.downcase == 'y'
-        load_save
+        round_init(true)
         return
       elsif input.downcase == 'n'
-        round_init
+        round_init(false)
         return
       else
         puts "input #{input} invalid: try again"
@@ -24,13 +25,8 @@ class Game
     end
   end
 
-  def load_save
-    puts 'Loading save!'
-    # loading logic to be added here
-  end
-
-  def round_init
-    r = Round.new
+  def round_init(condition)
+    r = Round.new(condition)
     r.begin
   end
 end

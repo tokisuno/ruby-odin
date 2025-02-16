@@ -1,16 +1,21 @@
+require 'json'
+
 # Daughter Round class
 class Round
-  def initialize
-    @word = secret_word
+  def initialize(condition)
+    @word = ''
     @max_guesses = 0
     @guesses = 0
     @used_letters = []
     @underscores = []
     @game = true
+    @load_state = condition
   end
 
+  include DataManip
+
   def debug
-    system('clear')
+    # system('clear')
     puts "WORD    | #{@word}"
     puts "GUESSES | #{@guesses}"
     puts "MAX GUESSES | #{@max_guesses}"
@@ -37,14 +42,19 @@ class Round
   end
 
   def begin
-    secret_word
-    # debug
+    if @load_state == true
+      load_save
+    else
+      secret_word
+    end
+    debug
     while @game
       puts "Make your guess! (#{@guesses}/#{@max_guesses})"
-      input = gets.chomp.downcase
-      if valid_input(input) == true
-        system('clear')
-        compare_input(input)
+      input = gets.chomp
+      save_and_quit if input == 'SAVE'
+      system('clear')
+      if valid_input(input.downcase) == true
+        compare_input(input.downcase)
         check_win
         display_underscores
         @guesses += 1
@@ -62,6 +72,8 @@ class Round
       puts 'you win!~~'
       @game = false
     end
+
+    @game = false if @guesses == @max_guesses
   end
 
   def display_underscores
