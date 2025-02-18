@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rightward assignment
 login = { username: 'hornby', password: 'iliketrains' }
 ## rubocop doesn't know how to deal with this LMAO
@@ -20,7 +22,7 @@ in [*pre, 2, 3, *post]
 end
 
 # now we're thinking with portals...
-case [1, 2, "a", 4, "b", "c", 7, 8, 9]
+case [1, 2, 'a', 4, 'b', 'c', 7, 8, 9]
 in [*pre, String => x, String => z, *post]
   p pre
   p x
