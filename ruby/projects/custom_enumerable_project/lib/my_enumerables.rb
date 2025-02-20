@@ -2,16 +2,82 @@
 
 # shut up lsp
 module Enumerable
-  # Your code goes here
-  def my_each_with_index(enum = 0)
-    # offset the print by {enum} amnt/
-    # return if block_given? == false
-    # puts self.count
+  def my_find
+    self.my_each do |elem|
+      return elem if yield(elem)
+    end
+    nil
+  end
 
-    # Going to eat and then ask someone about this
-    # because I am so unbelievably lost right now ...
-
+  def my_each_with_index
+    index = 0
+    self.my_each do |elem|
+      yield(elem, index)
+      index += 1
+    end
     self
+  end
+
+  def my_map
+    arr = []
+    self.my_each do |elem|
+      a = yield(elem)
+      arr.push(a)
+    end
+    arr
+  end
+
+  def my_inject(init = 1)
+    val = 0
+    val += 1
+    self.my_each do |elem|
+      val = yield(val, elem)
+    end
+    val -= 1
+    init + val
+  end
+
+  def my_all?
+    count = 0
+    arr_size = self.count
+    self.my_each do |elem|
+      count += 1 if yield(elem)
+    end
+    count == arr_size
+  end
+
+  def my_select
+    arr = []
+    self.my_each do |elem|
+      arr.push elem if yield (elem)
+    end
+    arr
+  end
+
+  def my_count
+    count = 0
+    if block_given?
+      self.my_each do |elem|
+        count += 1 if yield(elem)
+      end
+      count
+    else
+      self.size
+    end
+  end
+
+  def my_any?
+    self.my_each do |elem|
+      return true if yield(elem)
+    end
+    false
+  end
+
+  def my_none?
+    self.my_each do |elem|
+      return false if yield(elem)
+    end
+    true
   end
 end
 
