@@ -22,9 +22,18 @@ def lame_to_roman(val, res = [])
   val = val.to_s.split(//).map(&:to_i)
   size = val.size
   val.each_with_index do |el, i|
-    el *= (10**(size - i - 1))
+    el_full = el * (10**(size - i - 1))
+    puts el_full
     puts el
-    if roman_mapping.keys.include?(el)
+    if roman_mapping.keys.include?(el_full)
+      if i == 0
+        if el == 1
+          res << roman_mapping[el_full]
+          next
+        else
+          res << roman_mapping[el_full] * el
+        end
+      end
       res << roman_mapping[el]
       next
     end
@@ -34,4 +43,4 @@ def lame_to_roman(val, res = [])
   res.join
 end
 
-p lame_to_roman(1555)
+p lame_to_roman(2555)
