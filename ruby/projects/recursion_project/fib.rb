@@ -7,11 +7,12 @@ def fibs(elem)
   fibs(elem - 1) + fibs(elem - 2)
 end
 
-arr = []
+def seq(size, index = 1, arr = [])
+  return arr if index == size + 1
 
-(1..10).each do |fib|
-  res = fibs(fib)
+  res = fibs(index)
   arr.push(res)
+  seq(size, index + 1, arr)
 end
 
-puts arr
+puts seq(10)
