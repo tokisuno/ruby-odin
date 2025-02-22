@@ -3,8 +3,9 @@
 # learn how tf merge-sort works again because it's been months
 # LMAO
 
-a = [2, 8, 15, 18, 19, 25]
-b = [5, 9, 12, 17]
+# a = [2, 8, 15, 18, 19, 25]
+# b = [5, 9, 12, 17]
+a = [9, 3, 7, 5, 6, 4, 8, 2]
 
 def merge(list_a, list_b)
   size_a = list_a.size
@@ -42,4 +43,16 @@ def merge(list_a, list_b)
   list_c
 end
 
-p merge(a, b)
+# psuedocode based on youtube video
+# (i am confused but it's getting there)
+def msort(_arr, low = 0, high = 0, res = [])
+  if low < high
+    mid = (low + high) / 2
+    msort(low, mid)
+    msort(mid + 1, high)
+    merge((low..mid), (mid + 1..high))
+  end
+  res
+end
+
+p msort(a)
