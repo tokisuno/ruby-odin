@@ -45,7 +45,7 @@ end
 
 # psuedocode based on youtube video
 # (i am confused but it's getting there)
-def msort(_arr, low = 0, high = 0, res = [])
+def thinking_msort(_arr, low = 0, high = 0, res = [])
   if low < high
     mid = (low + high) / 2
     msort(low, mid)
@@ -53,6 +53,18 @@ def msort(_arr, low = 0, high = 0, res = [])
     merge((low..mid), (mid + 1..high))
   end
   res
+end
+
+# i am realizing now the error of my ways but my stream is almost over...
+# god DAM<N IT
+def msort(arr, i_low = 0, i_high = 0, res = [])
+  i_high = arr.size - 1 if i_high.zero?
+  if i_low < i_high
+    i_mid = (i_low + i_high) / 2
+    x = msort(arr, i_low, i_mid)
+    y = msort(arr, i_mid + 1, i_high)
+    merge(x, y)
+  end
 end
 
 p msort(a)
