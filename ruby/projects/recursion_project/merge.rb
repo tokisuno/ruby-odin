@@ -3,9 +3,9 @@
 # learn how tf merge-sort works again because it's been months
 # LMAO
 
-# a = [2, 8, 15, 18, 19, 25]
-# b = [5, 9, 12, 17]
 a = [9, 3, 7, 5, 6, 4, 8, 2]
+b = [3, 2, 1, 13, 8, 5, 0, 1]
+c = [105, 79, 100, 110]
 
 def merge(list_a, list_b)
   size_a = list_a.size
@@ -43,28 +43,18 @@ def merge(list_a, list_b)
   list_c
 end
 
-# psuedocode based on youtube video
-# (i am confused but it's getting there)
-def thinking_msort(_arr, low = 0, high = 0, res = [])
-  if low < high
-    mid = (low + high) / 2
-    msort(low, mid)
-    msort(mid + 1, high)
-    merge((low..mid), (mid + 1..high))
-  end
-  res
+def merge_sort(arr)
+  return arr if arr.length <= 1
+
+  mid = arr.length / 2
+  lhs = arr.take(mid)
+  rhs = arr.drop(mid)
+  left = merge_sort(lhs)
+  right = merge_sort(rhs)
+
+  merge(left, right)
 end
 
-# i am realizing now the error of my ways but my stream is almost over...
-# god DAM<N IT
-def msort(arr, i_low = 0, i_high = 0, res = [])
-  i_high = arr.size - 1 if i_high.zero?
-  if i_low < i_high
-    i_mid = (i_low + i_high) / 2
-    x = msort(arr, i_low, i_mid)
-    y = msort(arr, i_mid + 1, i_high)
-    merge(x, y)
-  end
-end
-
-p msort(a)
+p merge_sort(a)
+p merge_sort(b)
+p merge_sort(c)
