@@ -44,8 +44,6 @@ class LinkedList
   end
 
   def head
-    puts "Value: #{@head.value}"
-    puts "Next node: #{@head.next_node.value}"
     @head
   end
 
@@ -140,11 +138,31 @@ class LinkedList
   end
 
   def insert_at(value, index)
-
+    counter = 0
+    new_list = LinkedList.new()
+    while counter < self.size
+      if counter == index
+        new_list.append(value)
+      end
+      new_list.append(self.at(counter))
+      counter += 1
+    end
+    @head = new_list.head
   end
 
   def remove_at(index)
-
+    counter = 0
+    new_list = LinkedList.new()
+    while counter < self.size
+      if counter == index
+        counter += 1
+        next
+      else
+        new_list.append(self.at(counter))
+        counter += 1
+      end
+    end
+    @head = new_list.head
   end
 end
 
@@ -166,6 +184,14 @@ list.append('parrot')
 list.append('hamster')
 list.append('snake')
 list.append('turtle')
+
+puts list
+
+list.insert_at('oranges', 1)
+
+puts list
+
+list.remove_at(1)
 
 puts list
 
