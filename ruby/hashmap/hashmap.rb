@@ -3,10 +3,12 @@ require 'pp'
 
 # raise IndexError if index.negative? || index >= @buckets.length
 class HashMap
-  def initialize(lf = 0.75, cap = 16)
+  attr_accessor :buckets
+
+  def initialize(lf = 0.75, cap = 16, buckets = Array.new(cap) { LinkedList.new })
     @lf = lf
     @cap = cap
-    @buckets = Array.new(@cap) { LinkedList.new }
+    @buckets = buckets
   end
 
   def hash(key)
@@ -19,12 +21,9 @@ class HashMap
   end
 
   def set(key, value)
-    limit = @cap * @lf
-    if self.length == limit
-      (1..@cap).each do |list|
-        @buckets << LinkedList.new
-      end
-      @cap = @cap * 2
+    # load factor/re-hashing (pain)
+    if self.length == @cap * @lf
+      self.rehash
     end
 
     pos = hash(key) % @cap
@@ -43,12 +42,41 @@ class HashMap
   end
 
   def get(key)
+    pos = hash(key) % @cap
+    if @buckets[pos].head != nil
+      return @buckets[pos].head.value
+    else
+      nil
+    end
   end
 
   def has?(key)
+    pos = hash(key) % @cap
+    if @buckets[pos].head != nil
+      true
+    else
+      false
+    end
   end
 
   def remove(key)
+    head = @buckets[hash(key) % @cap].head
+    head_prev = @buckets[hash(key) % @cap].head
+
+    loop do
+      if head.key == key
+        val = head.value
+        # pp head
+        # pp head_prev
+        head_prev.next_node = nil
+        @buckets[hash(key) % @cap].head = head_prev
+        head = nil
+        return val
+      else
+        head_prev = head
+        head = head.next_node
+      end
+    end
   end
 
   def length
@@ -64,6 +92,8 @@ class HashMap
   end
 
   def clear
+    @cap = 16
+    @buckets = Array.new(@cap) { LinkedList.new }
   end
 
   def keys
@@ -101,6 +131,21 @@ class HashMap
     end
     entries
   end
+
+  private
+
+  def rehash
+    elems = self.entries
+    @cap *=  2
+    temp_hash = HashMap.new(0.75, @cap, Array.new(@cap) { LinkedList.new })
+    elems.each do |elem|
+      # puts "#{elem[0]}, #{elem[1]}"
+      temp_hash.set(elem[0], elem[1])
+    end
+    # pp temp_hash
+    @buckets = temp_hash.buckets
+    # pp @buckets
+  end
 end
 
 hm = HashMap.new
@@ -118,13 +163,17 @@ hm.set('kite', 'pink')
 hm.set('lion', 'golden')
 hm.set('something', 'something_else')
 hm.set('apple', 'ragnarok, god of destruction')
+hm.set('anger', 'hi')
+hm.set('rahrahrah', 'hello')
+hm.set('bike', 'ginger')
+hm.set('aaaaaaa', 'haaaaa')
 
-# p LinkedList.instances
+pp hm
 
 # puts "Length of hashmap = #{hm.length}"
 
-# pp hm
-
 # pp hm.keys
 # pp hm.values
-pp hm.entries
+# pp hm.entries
+# pp hm.remove('apple')
+# pp hm.remove('something')
