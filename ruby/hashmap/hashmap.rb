@@ -22,13 +22,11 @@ class HashMap
 
   def set(key, value)
     # load factor/re-hashing (pain)
-    if self.length == @cap * @lf
-      self.rehash
-    end
+    rehash if length == @cap * @lf
 
     pos = hash(key) % @cap
 
-    if @buckets[pos].head != nil
+    unless @buckets[pos].head.nil?
       if @buckets[pos].head.key == key
         @buckets[pos].head.value = value
         return
@@ -43,20 +41,12 @@ class HashMap
 
   def get(key)
     pos = hash(key) % @cap
-    if @buckets[pos].head != nil
-      return @buckets[pos].head.value
-    else
-      nil
-    end
+    @buckets[pos].head.value unless @buckets[pos].head.nil?
   end
 
   def has?(key)
     pos = hash(key) % @cap
-    if @buckets[pos].head != nil
-      true
-    else
-      false
-    end
+    @buckets[pos].head != nil
   end
 
   def remove(key)
@@ -83,12 +73,12 @@ class HashMap
     count = 0
     @buckets.each do |bucket|
       head = bucket.head
-      while head != nil
+      until head.nil?
         count += 1
         head = head.next_node
       end
     end
-    return count
+    count
   end
 
   def clear
@@ -100,7 +90,7 @@ class HashMap
     keys = []
     @buckets.each do |bucket|
       head = bucket.head
-      while head != nil
+      until head.nil?
         keys << head.key
         head = head.next_node
       end
@@ -112,7 +102,7 @@ class HashMap
     values = []
     @buckets.each do |bucket|
       head = bucket.head
-      while head != nil
+      until head.nil?
         values << head.value
         head = head.next_node
       end
@@ -124,7 +114,7 @@ class HashMap
     entries = []
     @buckets.each do |bucket|
       head = bucket.head
-      while head != nil
+      until head.nil?
         entries << [head.key, head.value]
         head = head.next_node
       end
@@ -135,16 +125,13 @@ class HashMap
   private
 
   def rehash
-    elems = self.entries
-    @cap *=  2
+    elems = entries
+    @cap *= 2
     temp_hash = HashMap.new(0.75, @cap, Array.new(@cap) { LinkedList.new })
     elems.each do |elem|
-      # puts "#{elem[0]}, #{elem[1]}"
       temp_hash.set(elem[0], elem[1])
     end
-    # pp temp_hash
     @buckets = temp_hash.buckets
-    # pp @buckets
   end
 end
 
