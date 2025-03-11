@@ -40,24 +40,43 @@ class HashMap
   end
 
   def get(key)
-    pos = hash(key) % @cap
-    @buckets[pos].head.value unless @buckets[pos].head.nil?
+    head = @buckets[hash(key) % @cap].head
+    loop do
+      if !head.nil?
+        if head.key == key
+          puts "#{head.key}, #{key}"
+          return head.value
+        else
+          head = head.next_node
+        end
+      end
+    end
   end
 
   def has?(key)
-    pos = hash(key) % @cap
-    @buckets[pos].head != nil
+    head = @buckets[hash(key) % @cap].head
+    loop do
+      if !head.nil?
+        if head.key == key
+          return true
+        else
+          head = head.next_node
+        end
+      else
+        return false
+      end
+    end
   end
 
   def remove(key)
+    # list = @buckets[hash(key) % @cap]
+    # index = list.find(key)
+    # list.remove_at(index)
     head = @buckets[hash(key) % @cap].head
-    head_prev = @buckets[hash(key) % @cap].head
-
+    head_prev = head
     loop do
       if head.key == key
         val = head.value
-        # pp head
-        # pp head_prev
         head_prev.next_node = nil
         @buckets[hash(key) % @cap].head = head_prev
         head = nil
@@ -156,11 +175,13 @@ hm.set('bike', 'ginger')
 hm.set('aaaaaaa', 'haaaaa')
 
 pp hm
-
+# pp hm.get('bike')
+# pp hm.has?('bike')
 # puts "Length of hashmap = #{hm.length}"
 
 # pp hm.keys
 # pp hm.values
 # pp hm.entries
 # pp hm.remove('apple')
-# pp hm.remove('something')
+pp hm.remove('something')
+pp hm

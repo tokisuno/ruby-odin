@@ -68,10 +68,9 @@ class LinkedList
 
   def at(index)
     counter = 0
-    size = self.size
     item = @head
     loop do
-      if index > size
+      if index > self.size.to_i
         puts "ERR: Out of range"
         return -1
       end
