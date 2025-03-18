@@ -4,6 +4,20 @@ def pretty_print(node = @root, prefix = '', is_left = true)
    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
 
+def print_orders(tree)
+  puts ''
+  puts '# Level order'
+  puts tree.level_order
+
+  puts '# Preorder'
+  puts tree.preorder
+
+  puts '# Inorder'
+  puts tree.inorder
+
+  puts '# Postorder'
+  puts tree.postorder
+end
 
 class Node
 attr_accessor :left, :right, :data
@@ -15,16 +29,16 @@ attr_accessor :left, :right, :data
 end
 
 class Tree
-  attr_accessor :root
+  attr_accessor :root, :arr
 
   def initialize(arr)
-    @arr = arr
+    @arr = arr.uniq.sort
     @root = build_tree(arr.uniq.sort)
   end
 
   def build_tree(arr)
     @root = sorted_arr_to_bst(arr)
-    preorder(@root)
+    # preorder(@root)
     @root
   end
 
@@ -48,7 +62,11 @@ class Tree
   end
 
   def insert(key, root = @root)
-    if root == nil then return Node.new(key) end
+    if root == nil
+      @arr.append(key)
+      @arr = @arr.uniq.sort
+      return Node.new(key)
+    end
 
     if root == key then root end
 
@@ -57,7 +75,6 @@ class Tree
     else
       root.left = insert(key, root.left)
     end
-
     root
   end
 
@@ -99,10 +116,49 @@ class Tree
     puts root.data
   end
 
-  def balanced?
-    # when it is initialized,
-    # it is already an arr in order with only unique values...
-    true
+  def depth(node, root = @root)
+    if root.nil? then return -1 end
+
+    iter = -1
+
+    if root.data == node.data
+      return iter + 1
+    else
+      iter = depth(node, root.left)
+      if iter >= 0
+        return iter + 1
+      else
+        iter = depth(node, root.right)
+        if iter >= 0
+          return iter + 1
+        end
+      end
+    return iter
+    end
+  end
+
+  def height(root = @root)
+    if root.nil? then return -1 end
+
+    l_height = height(root.left)
+    r_height = height(root.right)
+
+    return [l_height, r_height].max + 1
+  end
+
+  def balanced?(root = @root)
+    if root.nil? then return true end
+
+    l_height = height(root.left)
+    r_height = height(root.right)
+
+    if l_height.abs - r_height.abs > 1 then return false end
+
+    balanced?(root.left) and balanced?(root.right)
+  end
+
+  def rebalance
+    @root = build_tree(@arr)
   end
 
   private
@@ -153,12 +209,33 @@ input = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 tree = Tree.new(input)
 tree.insert(69)
 tree.delete(1)
-pretty_print tree.root
 
 # puts tree.find(69)
 # puts tree.find(420)
 
-puts tree.level_order
-puts tree.preorder
-puts tree.inorder
-puts tree.postorder
+# puts tree.level_order
+# puts '# Preorder'
+# puts tree.preorder
+#
+# puts '# Inorder'
+# puts tree.inorder
+#
+# puts '# Postorder'
+# puts tree.postorder
+
+numbz = [5, 19, 22, 24, 25, 30, 47, 50, 51, 59, 88, 71, 87, 95, 96]
+# temp_arr = Array.new(15) { rand(1..100) }
+numbz.each do |elem|
+  tree.insert(elem)
+end
+
+# print_orders(tree)
+
+# p tree.arr
+tree.rebalance
+puts tree.balanced?
+pretty_print tree.root
+
+# node = tree.find(69)
+# puts "Height: #{tree.height(node)}"
+# puts "Depth: #{tree.depth(node)}"
