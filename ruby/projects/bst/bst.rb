@@ -1,7 +1,7 @@
 def pretty_print(node = @root, prefix = '', is_left = true)
-   pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
-   puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
-   pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+  puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+  pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
 
 def print_orders(tree)
@@ -20,7 +20,8 @@ def print_orders(tree)
 end
 
 class Node
-attr_accessor :left, :right, :data
+  attr_accessor :left, :right, :data
+
   def initialize(data)
     @data = data
     @left = nil
@@ -43,32 +44,32 @@ class Tree
   end
 
   def delete(key, root = @root)
-    if root == nil then root end
+    root if root.nil?
 
     if root.data > key
       root.left = delete(key, root.left)
     elsif root.data < key
       root.right = delete(key, root.right)
     else
-      if root.left.nil? then return root.right end
-      if root.right.nil? then return root.left end
+      return root.right if root.left.nil?
+      return root.left if root.right.nil?
 
       succ = get_successor(root)
       root.data = succ.data
       root.right = delete(succ.right, root.right)
     end
 
-    return root
+    root
   end
 
   def insert(key, root = @root)
-    if root == nil
+    if root.nil?
       @arr.append(key)
       @arr = @arr.uniq.sort
       return Node.new(key)
     end
 
-    if root == key then root end
+    root if root == key
 
     if root.data < key
       root.right = insert(key, root.right)
@@ -80,36 +81,35 @@ class Tree
 
   def find(value)
     i = search(value)
-    if !i.nil?
-      return i
-    else
-      puts "Not found :/"
-    end
+    return i unless i.nil?
+
+    puts 'Not found :/'
   end
 
   def level_order(root = @root)
     res = []
     level_order_rec(0, res, root)
-    return res
+    res
   end
 
   def preorder(root = @root)
-    if root.nil? then return end
+    return if root.nil?
+
     puts root.data
     preorder(root.left)
     preorder(root.right)
   end
 
   def inorder(root = @root)
-    if root
-      inorder(root.left)
-      puts root.data
-      inorder(root.right)
-    end
+    return unless root
+
+    inorder(root.left)
+    puts root.data
+    inorder(root.right)
   end
 
   def postorder(root = @root)
-    if root.nil? then return end
+    return if root.nil?
 
     postorder(root.left)
     postorder(root.right)
@@ -117,42 +117,37 @@ class Tree
   end
 
   def depth(node, root = @root)
-    if root.nil? then return -1 end
+    return -1 if root.nil?
 
     iter = -1
 
-    if root.data == node.data
-      return iter + 1
-    else
-      iter = depth(node, root.left)
-      if iter >= 0
-        return iter + 1
-      else
-        iter = depth(node, root.right)
-        if iter >= 0
-          return iter + 1
-        end
-      end
-    return iter
-    end
+    return iter + 1 if root.data == node.data
+
+    iter = depth(node, root.left)
+    return iter + 1 if iter >= 0
+
+    iter = depth(node, root.right)
+    return iter + 1 if iter >= 0
+
+    iter
   end
 
   def height(root = @root)
-    if root.nil? then return -1 end
+    return -1 if root.nil?
 
     l_height = height(root.left)
     r_height = height(root.right)
 
-    return [l_height, r_height].max + 1
+    [l_height, r_height].max + 1
   end
 
   def balanced?(root = @root)
-    if root.nil? then return true end
+    return true if root.nil?
 
     l_height = height(root.left)
     r_height = height(root.right)
 
-    if l_height.abs - r_height.abs > 1 then return false end
+    return false if l_height.abs - r_height.abs > 1
 
     balanced?(root.left) and balanced?(root.right)
   end
@@ -164,40 +159,38 @@ class Tree
   private
 
   def sorted_arr_to_bst_rec(arr, start, ending)
-    if start > ending then return nil end
+    return nil if start > ending
 
     mid = start + (ending - start) / 2
     root = Node.new(arr[mid])
     root.left = sorted_arr_to_bst_rec(arr, start, mid - 1)
     root.right = sorted_arr_to_bst_rec(arr, mid + 1, ending)
 
-    return root
+    root
   end
 
   def sorted_arr_to_bst(arr)
-    return sorted_arr_to_bst_rec(arr, 0, arr.length - 1)
+    sorted_arr_to_bst_rec(arr, 0, arr.length - 1)
   end
 
   def get_successor(curr)
     curr = curr.right
-    while curr != nil && curr.left != nil
-      curr = curr.left
-    end
-    return curr
+    curr = curr.left while !curr.nil? && !curr.left.nil?
+    curr
   end
 
   def search(value, root = @root)
-    if root.nil? || root.data == value then return root end
+    return root if root.nil? || root.data == value
 
-    if root.data < value then return search(value, root.right) end
+    return search(value, root.right) if root.data < value
 
-    return search(value, root.left)
+    search(value, root.left)
   end
 
   def level_order_rec(level, res, root = @root)
-    if root.nil? then return end
+    return if root.nil?
 
-    if res.length <= level then res.append([]) end
+    res.append([]) if res.length <= level
     res[level].append(root.data)
 
     level_order_rec(level + 1, res, root.left)
