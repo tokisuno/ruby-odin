@@ -1,3 +1,10 @@
+# Goals for today
+## Manageable
+# - Make sure the traversal methods return an Array instead of using #puts methods
+## Kinda hard
+# - Remove the reference to the original Array with @arr in method
+# ++ Typically one source of truth for any state
+
 def pretty_print(node = @root, prefix = '', is_left = true)
   pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
   puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -86,34 +93,43 @@ class Tree
     puts 'Not found :/'
   end
 
+  # -- Traversal methods --
   def level_order(root = @root)
     res = []
     level_order_rec(0, res, root)
     res
   end
 
-  def preorder(root = @root)
+  def preorder(root = @root, arr = [])
     return if root.nil?
 
-    puts root.data
-    preorder(root.left)
-    preorder(root.right)
+    arr.push(root.data) unless find(root.data).nil?
+
+    preorder(root.left, arr)
+    preorder(root.right, arr)
+
+    arr
   end
 
-  def inorder(root = @root)
+  def inorder(root = @root, arr = [])
     return unless root
 
-    inorder(root.left)
-    puts root.data
-    inorder(root.right)
+    inorder(root.left, arr)
+    arr.push(root.data) unless find(root.data).nil?
+    inorder(root.right, arr)
+
+    arr
   end
 
-  def postorder(root = @root)
+  def postorder(root = @root, arr = [])
     return if root.nil?
 
-    postorder(root.left)
-    postorder(root.right)
-    puts root.data
+    postorder(root.left, arr)
+    postorder(root.right, arr)
+    arr.push(root.data) unless find(root.data).nil?
+
+    arr
+    # puts root.data
   end
 
   def depth(node, root = @root)
@@ -207,14 +223,15 @@ tree.delete(1)
 # puts tree.find(420)
 
 # puts tree.level_order
-# puts '# Preorder'
-# puts tree.preorder
 #
-# puts '# Inorder'
-# puts tree.inorder
-#
-# puts '# Postorder'
-# puts tree.postorder
+puts '# Preorder'
+p tree.preorder
+
+puts '# Inorder'
+p tree.inorder
+
+puts '# Postorder'
+p tree.postorder
 
 numbz = [5, 19, 22, 24, 25, 30, 47, 50, 51, 59, 88, 71, 87, 95, 96]
 # temp_arr = Array.new(15) { rand(1..100) }
@@ -225,9 +242,9 @@ end
 # print_orders(tree)
 
 # p tree.arr
-tree.rebalance
-puts tree.balanced?
-pretty_print tree.root
+# tree.rebalance
+# puts tree.balanced?
+# pretty_print tree.root
 
 # node = tree.find(69)
 # puts "Height: #{tree.height(node)}"
