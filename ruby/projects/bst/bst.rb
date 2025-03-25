@@ -1,10 +1,3 @@
-# Goals for today
-## Manageable
-# - Make sure the traversal methods return an Array instead of using #puts methods
-## Kinda hard
-# - Remove the reference to the original Array with @arr in method
-# ++ Typically one source of truth for any state
-
 def pretty_print(node = @root, prefix = '', is_left = true)
   pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
   puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -37,7 +30,7 @@ class Node
 end
 
 class Tree
-  attr_accessor :root, :arr
+  attr_accessor :root
 
   def initialize(arr)
     @arr = arr.uniq.sort
@@ -48,6 +41,17 @@ class Tree
     @root = sorted_arr_to_bst(arr)
     # preorder(@root)
     @root
+  end
+
+  def insert(key, root = @root)
+    return Node.new(key) if root.nil?
+
+    return root if root.data == key
+
+    root.right = insert(key, root.right) if root.data < key
+    root.left = insert(key, root.left) if root.data > key
+
+    root
   end
 
   def delete(key, root = @root)
@@ -63,26 +67,9 @@ class Tree
 
       succ = get_successor(root)
       root.data = succ.data
-      root.right = delete(succ.right, root.right)
+      root.right = delete(succ.data, root.right)
     end
 
-    root
-  end
-
-  def insert(key, root = @root)
-    if root.nil?
-      @arr.append(key)
-      @arr = @arr.uniq.sort
-      return Node.new(key)
-    end
-
-    root if root == key
-
-    if root.data < key
-      root.right = insert(key, root.right)
-    else
-      root.left = insert(key, root.left)
-    end
     root
   end
 
@@ -100,36 +87,44 @@ class Tree
     res
   end
 
-  def preorder(root = @root, arr = [])
+  def preorder(root = @root, arr = [], &block)
     return if root.nil?
 
-    arr.push(root.data) unless find(root.data).nil?
+    unless find(root.data).nil?
+      arr.push(root.data)
+      yield(root.data) if block_given?
+    end
 
-    preorder(root.left, arr)
-    preorder(root.right, arr)
+    preorder(root.left, arr, &block)
+    preorder(root.right, arr, &block)
 
     arr
   end
 
-  def inorder(root = @root, arr = [])
+  def inorder(root = @root, arr = [], &block)
     return unless root
 
-    inorder(root.left, arr)
-    arr.push(root.data) unless find(root.data).nil?
-    inorder(root.right, arr)
+    inorder(root.left, arr, &block)
+    unless find(root.data).nil?
+      arr.push(root.data)
+      yield (root.data) if block_given?
+    end
+    inorder(root.right, arr, &block)
 
     arr
   end
 
-  def postorder(root = @root, arr = [])
+  def postorder(root = @root, arr = [], &block)
     return if root.nil?
 
-    postorder(root.left, arr)
-    postorder(root.right, arr)
-    arr.push(root.data) unless find(root.data).nil?
+    postorder(root.left, arr, &block)
+    postorder(root.right, arr, &block)
+    unless find(root.data).nil?
+      arr.push(root.data)
+      yield (root.data) if block_given?
+    end
 
     arr
-    # puts root.data
   end
 
   def depth(node, root = @root)
@@ -219,33 +214,10 @@ tree = Tree.new(input)
 tree.insert(69)
 tree.delete(1)
 
-# puts tree.find(69)
-# puts tree.find(420)
-
-# puts tree.level_order
-#
-puts '# Preorder'
-p tree.preorder
-
-puts '# Inorder'
-p tree.inorder
-
-puts '# Postorder'
-p tree.postorder
-
 numbz = [5, 19, 22, 24, 25, 30, 47, 50, 51, 59, 88, 71, 87, 95, 96]
-# temp_arr = Array.new(15) { rand(1..100) }
 numbz.each do |elem|
   tree.insert(elem)
 end
 
-# print_orders(tree)
-
-# p tree.arr
-# tree.rebalance
-# puts tree.balanced?
-# pretty_print tree.root
-
-# node = tree.find(69)
-# puts "Height: #{tree.height(node)}"
-# puts "Depth: #{tree.depth(node)}"
+pretty_print tree.root
+puts tree.balanced?
