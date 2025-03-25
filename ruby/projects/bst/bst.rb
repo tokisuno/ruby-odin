@@ -33,13 +33,12 @@ class Tree
   attr_accessor :root
 
   def initialize(arr)
-    @arr = arr.uniq.sort
+    # @arr = arr.uniq.sort
     @root = build_tree(arr.uniq.sort)
   end
 
   def build_tree(arr)
     @root = sorted_arr_to_bst(arr)
-    # preorder(@root)
     @root
   end
 
@@ -164,7 +163,9 @@ class Tree
   end
 
   def rebalance
-    @root = build_tree(@arr)
+    arr = []
+    inorder { |elem| arr.push(elem) }
+    @root = build_tree(arr)
   end
 
   private
@@ -221,3 +222,6 @@ end
 
 pretty_print tree.root
 puts tree.balanced?
+tree.rebalance
+puts tree.balanced?
+pretty_print tree.root
