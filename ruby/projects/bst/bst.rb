@@ -4,21 +4,6 @@ def pretty_print(node = @root, prefix = '', is_left = true)
   pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
 end
 
-def print_orders(tree)
-  puts ''
-  puts '# Level order'
-  puts tree.level_order
-
-  puts '# Preorder'
-  puts tree.preorder
-
-  puts '# Inorder'
-  puts tree.inorder
-
-  puts '# Postorder'
-  puts tree.postorder
-end
-
 class Node
   attr_accessor :left, :right, :data
 
@@ -33,7 +18,6 @@ class Tree
   attr_accessor :root
 
   def initialize(arr)
-    # @arr = arr.uniq.sort
     @root = build_tree(arr.uniq.sort)
   end
 
