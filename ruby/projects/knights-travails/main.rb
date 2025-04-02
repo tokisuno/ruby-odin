@@ -4,32 +4,7 @@ require 'pp'
 # require binary search tree module
 # require_relative 'bst'
 
-# Graph's node
-class GraphNode
-  attr_accessor :value, neighbours
-
-  def initialize(value)
-    @value = value
-    @neighbours = []
-  end
-
-  def add_edge(neighbour)
-    @neighbours << neighbour
-  end
-end
-
-# The graph
-class Graph
-  attr_accessor :nodes
-
-  def initialize
-    @nodes = []
-  end
-
-  def add_node(value)
-    @nodes << GraphNode.new(value)
-  end
-end
+# I am so lost...
 
 # init board
 board = Array.new(8) { Array.new(8) { 0 } }
